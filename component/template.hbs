@@ -159,9 +159,8 @@
             <label class="acc-label">
               {{t "nodeDriver.harvester.imageName.label"}}{{field-required}}
             </label>
-            <NewSelect
+            <SearchableSelect
               @class="form-control"
-              @useContentForDefaultValue={{true}}
               @content={{imageContent}}
               @value={{config.imageName}}
             />
@@ -171,9 +170,8 @@
             <label class="acc-label">
               {{t "nodeDriver.harvester.networkName.label"}}{{field-required}}
             </label>
-            <NewSelect
+            <SearchableSelect
               @class="form-control"
-              @useContentForDefaultValue={{true}}
               @content={{networkContent}}
               @value={{config.networkName}}
             />
