@@ -99,7 +99,7 @@ export default Ember.Component.extend(NodeDriver, {
     const imageContent = get(this, 'imageContent');
     if (!imageContent.length) {
       get(this, 'globalStore').rawRequest({
-        url:  `${localhostPath}/v1/harvester.cattle.io.virtualmachineimages`,
+        url:  `${localhostPath}/v1/harvesterhci.io.virtualmachineimages`,
       }).then((resp) => {
         const data = resp.body.data || [];
         const arr = data.map( O => {
