@@ -73,15 +73,23 @@ export default Ember.Component.extend(NodeDriver, {
     const controller = new AbortController();
     set(this, 'controller', controller);
     this.fetchImage()
+
+    if (get(this, 'config').clusterType === 'internal') {
+      set(this, 'isInternalMode', true);
+    } else {
+      set(this, 'isInternalMode', false);
+    }
   },
   /*!!!!!!!!!!!DO NOT CHANGE END!!!!!!!!!!!*/
   changeMode: observer('isInternalMode', function() {
     if (get(this, 'isInternalMode')) {
       set(this, 'config.host', '');
       set(this, 'config.port', '');
+      set(this, 'config.clusterType', 'internal')
     } else {
       set(this, 'config.imageName', '');
       set(this, 'config.networkName', '');
+      set(this, 'config.clusterType', 'external')
     }
   }),
 
@@ -102,7 +110,9 @@ export default Ember.Component.extend(NodeDriver, {
         url:  `${localhostPath}/v1/harvesterhci.io.virtualmachineimages`,
       }).then((resp) => {
         const data = resp.body.data || [];
-        const arr = data.map( O => {
+        const arr = data.filter( O => {
+          return !O.spec.displayName.endsWith('.iso');
+        }).map( O => {
           const value = O.metadata.name;
           const label = `${ O.spec.displayName } (${value})`;
           return {
@@ -174,6 +184,7 @@ export default Ember.Component.extend(NodeDriver, {
       imageName:    '',
       sshUser:      '',
       networkName:  '',
+      clusterType:  'internal',
       cloudConfig:  '#cloud-config\n\n',
     });
 

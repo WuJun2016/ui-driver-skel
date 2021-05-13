@@ -218,14 +218,22 @@ define("nodes/components/driver-harvester/component", ["exports", "shared/mixins
       var controller = new AbortController();
       set(this, 'controller', controller);
       this.fetchImage();
+
+      if (get(this, 'config').clusterType === 'internal') {
+        set(this, 'isInternalMode', true);
+      } else {
+        set(this, 'isInternalMode', false);
+      }
     },
     changeMode: observer('isInternalMode', function () {
       if (get(this, 'isInternalMode')) {
         set(this, 'config.host', '');
         set(this, 'config.port', '');
+        set(this, 'config.clusterType', 'internal');
       } else {
         set(this, 'config.imageName', '');
         set(this, 'config.networkName', '');
+        set(this, 'config.clusterType', 'external');
       }
     }),
     fetchImage: (0, _debounce.throttledObserver)('config.host', 'config.port', _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
@@ -248,10 +256,12 @@ define("nodes/components/driver-harvester/component", ["exports", "shared/mixins
 
               if (!imageContent.length) {
                 get(this, 'globalStore').rawRequest({
-                  url: "".concat(localhostPath, "/v1/harvester.cattle.io.virtualmachineimages")
+                  url: "".concat(localhostPath, "/v1/harvesterhci.io.virtualmachineimages")
                 }).then(function (resp) {
                   var data = resp.body.data || [];
-                  var arr = data.map(function (O) {
+                  var arr = data.filter(function (O) {
+                    return !O.spec.displayName.endsWith('.iso');
+                  }).map(function (O) {
                     var value = O.metadata.name;
                     var label = "".concat(O.spec.displayName, " (").concat(value, ")");
                     return {
@@ -328,6 +338,7 @@ define("nodes/components/driver-harvester/component", ["exports", "shared/mixins
         imageName: '',
         sshUser: '',
         networkName: '',
+        clusterType: 'internal',
         cloudConfig: '#cloud-config\n\n'
       });
       set(this, 'model.harvesterConfig', config);
