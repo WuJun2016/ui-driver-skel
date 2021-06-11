@@ -214,6 +214,15 @@
           }}
         </div>
       </div>
+      <div class="row">
+        <div class="col span-12">
+          {{form-labels-annotations
+            model=metadata
+            expandAll=expandAll
+            expand=(action expandFn)
+          }}
+        </div>
+      </div>
     {{/accordion-list-item}}
     
   {{/accordion-list}}
