@@ -1,4 +1,6 @@
 # ui-driver-harvester
+[![Build Status](https://drone-publish.rancher.io/api/badges/harvester/ui-driver-harvester/status.svg)](https://drone-publish.rancher.io/harvester/ui-driver-harvester)
+
 Skeleton Rancher UI driver for custom docker-machine drivers
 
 **Note: The Master branch works with Rancher 2.x+, if you are building a custom driver for Rancher 1.x use the 1.x branch**
