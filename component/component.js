@@ -92,7 +92,15 @@ export default Ember.Component.extend(NodeDriver, {
       set(this, 'config.clusterType', 'external')
     }
   }),
-
+  observeMetadata: observer("metadata.{labels,annotations}", function () {
+      var metadata = this.get("metadata");
+      set(this, "config.annotations", JSON.stringify(metadata.annotations));
+      set(this, "config.labels", JSON.stringify(metadata.labels));
+    }),
+  metadata: {
+      labels: {},
+      annotations: {},
+  },
   fetchImage: throttledObserver('config.host', 'config.port', async function() {
     let controller = get(this, 'controller');
     let signal = get(this, 'signal');
